@@ -11,7 +11,7 @@ public interface DocumentService {
 
   BaseResponse getDocumentByDocumentTitle(String documentName);
 
-  BaseResponse editDocument(String documentId, DocumentReqDto documentReqDto);
+  BaseResponse editDocument(DocumentReqDto documentReqDto, String documentId);
 
   BaseResponse deleteDocument(String documentId);
 

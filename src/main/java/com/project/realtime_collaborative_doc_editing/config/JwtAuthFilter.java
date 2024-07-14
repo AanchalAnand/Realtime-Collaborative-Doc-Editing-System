@@ -37,34 +37,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
 
 
-//    String requestHeader = request.getHeader("Authorization");
-//    String username = null;
-//    String token = null;
-//    if (requestHeader != null && requestHeader.startsWith("Bearer")) {
-//      token = requestHeader.substring(7);
-//      username = this.jwtService.extractUsername(token);
-//    }
-
-//    HttpServletResponse httpResponse = getHttpServletResponse(response);
-//    HttpServletRequest httpRequest = getHttpServletRequest(request);
-//
-//    String requestBearerToken = "Bearer " + httpRequest.getParameter("token").replace(" ","+");
-    //String username = jwtService.extractUsername(requestBearerToken);
-//    Optional<User> userOpt = userRepository.findByUsername(username);
-//    if (Objects.isNull(userOpt)) {
-//      throw new RuntimeException("User not found");
-//    }
-//    User user = userOpt.get();
-    // Validate Token
-    //String requestBearerToken = request.getHeader("Authorization");
-//    Boolean isTokenValid = jwtService.isTokenValid(requestBearerToken.substring(7),user);
-//    if (Boolean.FALSE.equals(isTokenValid)) {
-//      httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//      httpResponse.setContentType("application/json");
-//      httpResponse.getWriter().write("{\"message\": \"Invalid Token\"}");
-//      return;
-//    }
-
     //Verify whether request has Authorization header and it has Bearer in it
     final String authHeader = request.getHeader("Authorization");
     final String jwt;

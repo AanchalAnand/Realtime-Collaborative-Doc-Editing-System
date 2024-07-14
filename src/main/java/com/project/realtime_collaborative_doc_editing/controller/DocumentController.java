@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DocumentController {
 
-  @Autowired
+
   private final DocumentServiceImpl documentService;
 
   @PostMapping("/create")
@@ -35,16 +35,15 @@ public class DocumentController {
     return baseResponse;
   }
 
-  @PutMapping("/edit")
-  public BaseResponse editDocument(){
-    BaseResponse baseResponse = new BaseResponse();
-    return baseResponse;
+  @PutMapping("/editDoc/{id}")
+  public BaseResponse editDocument(@RequestBody DocumentReqDto documentReqDto, @PathVariable("id") String id){
+    return documentService.editDocument(documentReqDto, id);
+
   }
 
-  @PutMapping("/delete")
-  public BaseResponse deleteDocument(){
-    BaseResponse baseResponse = new BaseResponse();
-    return baseResponse;
+  @PutMapping("/deleteDoc/{id}")
+  public BaseResponse deleteDocument(@PathVariable("id") String id){
+    return documentService.deleteDocument(id);
   }
 
   @GetMapping("search/{keyword}")

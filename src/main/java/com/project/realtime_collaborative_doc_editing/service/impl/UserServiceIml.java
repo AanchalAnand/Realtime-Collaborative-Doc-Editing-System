@@ -27,7 +27,6 @@ public class UserServiceIml implements UserService
   private final UserRepository userRepository;
   private final JwtService jwtService;
   private final PasswordEncoder passwordEncoder;
-  private final AuthenticationManager authenticationManager;
 
   public User saveUser(User user) {
     return userRepository.save(user);

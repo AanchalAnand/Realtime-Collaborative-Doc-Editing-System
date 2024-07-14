@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import org.springframework.util.ObjectUtils;
 
 @Data
 @Service
@@ -137,13 +138,80 @@ public class DocumentServiceImpl implements DocumentService
   }
 
   @Override
-  public BaseResponse editDocument(String documentId, DocumentReqDto documentReqDto) {
-    return null;
+  public BaseResponse editDocument(DocumentReqDto documentReqDto, String id) {
+    String token = httpServletRequest.getHeader("Authorization");
+    String accessToken = token.substring(7);
+
+    String emailId = jwtService.extractUsername(accessToken);
+    Optional<User> userOptional = userRepository.findByEmail(emailId);
+
+    if(ObjectUtils.isEmpty(userOptional)){
+      throw new UserNotFoundException("User not found", HttpStatus.NOT_FOUND);
+    }
+
+    Optional<DocumentDetails> documentOptional = documentRepository.findById(id);
+    if(ObjectUtils.isEmpty(documentOptional)){
+      throw new RuntimeException("Document not found");
+    }
+
+    if(!documentOptional.get().getUsersCanEdit().contains(emailId)){
+      throw new PermissionNotGrantedException("You do not have permission to edit this document", HttpStatus.FORBIDDEN);
+    }
+
+    DocumentDetails document = documentOptional.get();
+    document.setDocumentTitle(documentReqDto.getDocumentTitle());
+    document.setDocumentDescription(documentReqDto.getDocumentDescription());
+    document.setLastEditedAt(new Date());
+    document.setLastEditedBy(emailId);
+
+    HistoryDetails history = new HistoryDetails();
+    history.setUpdatedAt(new Date());
+    history.setUpdatedBy(emailId);
+    history.setOperationType("UPDATED");
+
+    List<HistoryDetails> historyList = document.getHistoryDetails();
+    historyList.add(history);
+
+    document.setHistoryDetails(historyList);
+    documentRepository.save(document);
+
+    BaseResponse baseResponse = new BaseResponse();
+    baseResponse.setPayload(document);
+    baseResponse.setSuccess(true);
+    baseResponse.setMessage("Document updated successfully");
+    baseResponse.setStatusCode(HttpStatus.OK.toString());
+    return baseResponse;
   }
 
   @Override
   public BaseResponse deleteDocument(String documentId) {
-    return null;
+    String token = httpServletRequest.getHeader("Authorization");
+    String accessToken = token.substring(7);
+
+    String email = jwtService.extractUsername(accessToken);
+    Optional<User> userOptional = userRepository.findByEmail(email);
+    if(ObjectUtils.isEmpty(userOptional)){
+      throw new UserNotFoundException("User not found", HttpStatus.NOT_FOUND);
+    }
+
+    Optional<DocumentDetails> documentOptional = documentRepository.findById(documentId);
+    if(ObjectUtils.isEmpty(documentOptional)){
+      throw new RuntimeException("Document not found");
+    }
+
+    if(!documentOptional.get().getDocumentCreatedBy().contains(email)){
+      throw new PermissionNotGrantedException("You do not have permission to delete this document", HttpStatus.FORBIDDEN);
+    }
+
+    BaseResponse baseResponse = new BaseResponse();
+    baseResponse.setSuccess(true);
+    baseResponse.setMessage("Document deleted successfully");
+    baseResponse.setStatusCode(HttpStatus.OK.toString());
+    baseResponse.setPayload(documentOptional.get().getDocumentTitle());
+
+    documentRepository.delete(documentOptional.get());
+
+    return baseResponse;
   }
 
   @Override

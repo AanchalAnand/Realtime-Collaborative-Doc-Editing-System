@@ -8,10 +8,7 @@ public class UserNotFoundException extends RuntimeException {
 
   private final HttpStatus httpStatus;
 
-  public UserNotFoundException(HttpStatus httpStatus) {
-    super();
-    this.httpStatus = httpStatus;
-  }
+
 
   public UserNotFoundException(String msg, HttpStatus httpStatus) {
     super(msg);

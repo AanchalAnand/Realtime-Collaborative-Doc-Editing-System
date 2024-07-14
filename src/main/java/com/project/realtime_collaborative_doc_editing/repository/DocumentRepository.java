@@ -11,9 +11,6 @@ import java.util.Optional;
 
 public interface DocumentRepository extends MongoRepository<DocumentDetails,String> {
 
-
-  Optional<DocumentDetails> findByDocumentId(String documentId);
-
   Optional<DocumentDetails> findByDocumentTitle(String documentTitle);
 
   //@Query("select * from documents where documents.documentsTitle = "+ keyword)
