@@ -139,6 +139,7 @@ public class DocumentServiceImpl implements DocumentService
 
   @Override
   public BaseResponse editDocument(DocumentReqDto documentReqDto, String id) {
+    System.out.print("Edit doc");
     String token = httpServletRequest.getHeader("Authorization");
     String accessToken = token.substring(7);
 
