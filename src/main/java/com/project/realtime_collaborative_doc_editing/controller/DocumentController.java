@@ -52,4 +52,9 @@ public class DocumentController {
     return baseResponse;
   }
 
+//  Real-time typing indicators (/api/documents/{id}/typing).
+//  GET /api/documents/{id}/export?format=pdf → Export doc as PDF/Word/Markdown.
+//
+//      POST /api/documents/import → Upload & convert file to doc.
+//  Notifications
 }
